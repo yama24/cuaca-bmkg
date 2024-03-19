@@ -3,8 +3,6 @@
 namespace Yama\CuacaBmkg;
 
 use Symfony\Component\DomCrawler\Crawler;
-use Laravie\Parser\Xml\Reader;
-use Laravie\Parser\Xml\Document;
 
 class CuacaBmkg
 {
