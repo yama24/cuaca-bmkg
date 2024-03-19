@@ -9,7 +9,7 @@ $cuaca = new CuacaBmkg();
 
 $provinsi = $cuaca->getProvinsi();
 
-// echo json_encode($provinsi);
+// echo json_encode($provinsi);die;
 
 $weather = $cuaca->getWeather('DKIJakarta');
 

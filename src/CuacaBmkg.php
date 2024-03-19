@@ -44,7 +44,13 @@ class CuacaBmkg
             foreach ($xml->children($namespace) as $childXml) {
                 //recurse into child nodes
                 $childArray = $this->xmlToArray($childXml, $options);
-                list($childTagName, $childProperties) = each($childArray);
+                // list($childTagName, $childProperties) = each($childArray);
+                $childTagName = [];
+                $childProperties = [];
+                foreach ($childArray as $key => $value) {
+                    $childTagName = $key;
+                    $childProperties = $value;
+                }
 
                 //replace characters in tag name
                 if ($options['keySearch']) $childTagName =
