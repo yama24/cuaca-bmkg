@@ -7,10 +7,13 @@ use Yama\CuacaBmkg\CuacaBmkg;
 
 $cuaca = new CuacaBmkg();
 
-$provinsi = $cuaca->getProvinsi();
+$provinsi = $cuaca->get('provinsi');
 
 // echo json_encode($provinsi);die;
 
-$weather = $cuaca->getWeather('DKIJakarta');
+$cuaca->weather('DKIJakarta');
 
-echo json_encode($weather);
+// $weather = $cuaca->get('area');
+$weather = $cuaca->getAreaByName('%barat%');
+
+var_dump($weather);
