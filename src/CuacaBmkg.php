@@ -22,7 +22,7 @@ class CuacaBmkg
     {
         return $this->$prop;
     }
-    
+
     protected function getProvinsi()
     {
         $url = "https://data.bmkg.go.id/prakiraan-cuaca/";
@@ -53,7 +53,7 @@ class CuacaBmkg
         return $dataProvinsi;
     }
 
-    public function weather($idProvinsi) :void
+    public function weather($idProvinsi): void
     {
         $url = "https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/DigitalForecast-" . $idProvinsi . ".xml";
         $data = file_get_contents($url);
@@ -83,6 +83,23 @@ class CuacaBmkg
 
         $areaData = [];
 
+        $kodeCuaca = [
+            0 => "Cerah/Clear Skies",
+            1 => "Cerah Berawan/Partly Cloudy",
+            2 => "Cerah Berawan/Partly Cloudy",
+            3 => "Berawan/Mostly Cloudy",
+            4 => "Berawan Tebal/Overcast",
+            5 => "Udara Kabur/Haze",
+            10 => "Asap/Smoke",
+            45 => "Kabut/Fog",
+            60 => "Hujan Ringan/Light Rain",
+            61 => "Hujan Sedang/Rain",
+            63 => "Hujan Lebat/Heavy Rain",
+            80 => "Hujan Lokal/Isolated Shower",
+            95 => "Hujan Petir/Severe Thunderstorm",
+            97 => "Hujan Petir/Severe Thunderstorm",
+        ];
+
         foreach ($area as $a) {
             $temp = $a;
 
@@ -92,6 +109,7 @@ class CuacaBmkg
             $temp['day'] = [];
 
             foreach ($temp['parameter'] as $key => $val) {
+                $i = 0;
                 foreach ($val['timerange'] as $k => $v) {
                     $timestamp = strtotime($v['datetime']);
                     $date = date('Ymd', $timestamp);
@@ -100,12 +118,16 @@ class CuacaBmkg
                     $temp['day'][$date]['parameter'][$val['id']]['description'] = $val['description'];
                     $temp['day'][$date]['parameter'][$val['id']]['type'] = $val['type'];
                     $type = $v['type'] == 'daily' ? 'day' : 'h';
-                    $temp['day'][$date]['parameter'][$val['id']]['time'][] = [
+                    $temp['day'][$date]['parameter'][$val['id']]['time'][$i] = [
                         // 'type' => $v['type'],
                         // $type => $v[$type],
                         'timestamp' => $timestamp,
                         'value' => $v['value'],
                     ];
+                    if ($val['id'] == 'weather') {
+                        $temp['day'][$date]['parameter'][$val['id']]['time'][$i]['value']['description'] = $kodeCuaca[$v['value']['text']];
+                    }
+                    $i++;
                 }
             }
 
@@ -214,7 +236,8 @@ function xmlToArray($xml, $options = array())
     );
 }
 
-function like($pattern, $subject) {
+function like($pattern, $subject)
+{
     // Escape special regex characters
     $pattern = preg_quote($pattern, '#');
 
